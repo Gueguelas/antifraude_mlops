@@ -46,7 +46,7 @@ python config.py              # confere as conexões e imprime o comando do MLfl
 O servidor do MLflow **não lê o `.env`**: a conexão vai na linha de comando. Use exatamente o comando que o `python config.py` imprimiu. Com os valores padrão:
 
 ```bash
-python -m mlflow server --host 127.0.0.1 --port 5000 --backend-store-uri postgresql://postgres:postgres@localhost:5432/mlflow --default-artifact-root ./mlruns
+python -m mlflow server --host 127.0.0.1 --port 5000 --backend-store-uri postgresql://postgres:1234@localhost:5432/mlflow --default-artifact-root ./mlruns
 ```
 
 Abra http://127.0.0.1:5000.
@@ -58,7 +58,7 @@ Se aparecer `ImportError: cannot import name 'FallbackAsyncAdaptedQueuePool'`, r
 Sempre a partir desta pasta (a raiz do projeto):
 
 ```bash
-uvicorn app.main:app --reload --port 8000
+python -m uvicorn app.main:app --reload --port 8000
 ```
 
 Abra http://127.0.0.1:8000. Antes do seu primeiro modelo, o topo da tela mostra **"sem modelo em produção"** — é o esperado.
