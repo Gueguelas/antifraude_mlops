@@ -4,6 +4,120 @@ Este é o sistema de produção da prática. Ele recebe os lotes semanais de tra
 
 O **modelo é seu**. O sistema só sabe usar o que você registrar no MLflow.
 
+## Entrega implementada — parte 1
+
+O notebook `parte1.ipynb` está preenchido e executado, com as respostas em texto,
+gráficos, comparação das runs e evidências de produção. O nome de entrega foi
+preenchido como **Miguel Araujo**, inferido do workspace; ajuste `NOME_ALUNO` se necessário.
+
+| Alternativa | Custo médio por semana (validação 11–12) |
+|---|---:|
+| Aprovar tudo | R$ 188.017,77 |
+| Regra Pix > R$ 1.000 | R$ 112.674,90 |
+| Regressão logística, corte 0,70 | R$ 18.148,53 |
+| Boosting, corte padrão 0,50 | R$ 20.810,62 |
+| **Boosting, corte escolhido 0,06** | **R$ 12.424,30** |
+
+Economia estimada de **R$ 100.250,59 por semana (89,0%)** frente à regra Pix.
+No total de 39.497 transações de validação, o campeão bloqueia 489 transações
+legítimas e deixa passar 91 fraudes; recall 84,83%, precision 51,00% e PR-AUC
+(average precision) 0,8363. Não houve ajuste com semanas posteriores ao histórico.
+As duas semanas de validação também escolheram o modelo e o corte; esses números
+não são um teste independente nem garantia de resultado futuro.
+
+### Rodar no OrbStack
+
+```bash
+docker context use orbstack
+make up          # cria .env, faz build e espera os serviços ficarem prontos
+make executar    # treina, registra, promove, valida e gera notebook/HTML/ZIP
+make test        # testes de contrato, custo, monitoramento e integração real
+make entrega     # atualiza ZIP sem treinar nem mudar o champion
+```
+
+O Postgres é exclusivo deste projeto; não reutiliza nem modifica outros containers.
+Há dois volumes persistentes (bancos e artefatos do MLflow). `make down` para a stack
+preservando os volumes; `make up` volta a subir. Não use `down -v` se quiser preservar
+o histórico. Reexecutar o notebook cria novas runs e uma nova versão registrada;
+o alias é atualizado e as semanas históricas 11–12 são repontuadas, mantendo o histórico.
+As semanas 1–10 ficam só no treino, não no painel de demonstração.
+
+| Serviço | Endereço |
+|---|---|
+| Painel | http://127.0.0.1:8000 |
+| Modelo em produção | http://127.0.0.1:8000/modelo |
+| MLflow | http://127.0.0.1:5000 |
+| Jupyter Lab | http://127.0.0.1:8888 |
+| Postgres | 127.0.0.1:54321 |
+
+Os serviços são publicados só em loopback. O token do Jupyter está no `.env`
+local (não incluído na entrega); use-o na tela de login. Senha e token são gerados
+uma vez por `make setup`. `requirements-lock.txt` registra as versões resolvidas e
+é usado como constraints nos próximos builds. A imagem usa Python 3.12 e as versões
+do enunciado para MLflow e scikit-learn.
+
+Se a rede inspeciona TLS, o build usa o certificado indicado em `SSL_CERT_FILE`
+como secret do BuildKit (fallback `/etc/ssl/cert.pem`). Nenhuma validação TLS é
+desabilitada. Em outra máquina, aponte essa variável para seu bundle de CAs confiáveis.
+O secret não é incorporado à imagem nem ao ZIP. Os artefatos são enviados e lidos
+pelo proxy HTTP do MLflow, com volume próprio; não dependem de caminhos de disco
+compartilhados entre o host e os clientes. Ver
+[documentação oficial de artefatos do MLflow 2.19](https://mlflow.org/docs/2.19.0/tracking/artifacts-stores.html).
+
+### Monitorar as próximas semanas
+
+1. Receba o CSV em **Lotes**: o sistema valida e pontua as 13 features.
+2. Rode o monitoramento imediatamente, sem rótulos:
+   `make monitorar SEMANA=13`.
+3. Na semana seguinte, receba os rótulos do lote anterior em **Rótulos**.
+   Depois da confirmação do fechamento e cobertura integral, rode:
+   `docker compose exec -T app python scripts/monitorar_semana.py --semana 13 --rotulos-fechados`.
+4. Leia as tabelas em `artefatos/monitoramento/semana_13/`, investigue os alertas e
+   registre a ação em **Decisões**. Não retreine só porque um teste acusou drift.
+
+O monitor sempre baixa a referência da run do champion. Confere versão, contrato,
+threshold e limites, e rejeita predições incompatíveis. Código de saída **0**:
+sem alertas; **1**: investigar alertas; **2**: falha operacional (também salva `falha.json`).
+Uma semana ainda não recebida é falha, não resultado saudável. A execução não é
+agendada automaticamente: rode-a a cada recebimento de transações e de rótulos.
+
+Os limites aprovados são KS D > 0,10 ou variação total > 0,05 com BH q < 0,01;
+mudança absoluta de bloqueio > 2 pp; aumento do custo por mil > 25%; queda de
+recall > 10 pp. Drift exige ao menos 500 observações; os alertas de performance
+exigem também ao menos 10 fraudes no segmento. Qualidade do contrato é crítica.
+Sem fechamento explícito e cobertura integral, recall, precision, PR-AUC e custo
+ficam pendentes: rótulo ausente nunca é convertido em transação legítima.
+
+O relatório zero **não é artificialmente limpo**: idade da conta tem p ≈ 1,13e−30,
+mas D ≈ 0,059 < 0,10; não dispara drift. O custo por mil cresce cerca de 44,8%
+da semana 11 para 12, gerando alertas globais e em dois canais, principalmente por
+maior valor das fraudes aprovadas. A análise e a decisão de investigar sem
+retreinar estão no notebook e no sistema. P-valores pequenos não bastam para
+demonstrar mudança relevante; poucas semanas e clientes recorrentes limitam a inferência.
+
+### Arquivos para avaliação
+
+- `entrega_parte1_miguel_araujo.zip`: pacote final, com manifesto SHA-256.
+- `parte1.ipynb`: roteiro respondido, executado e com saídas salvas.
+- `artefatos/parte1.html`: leitura do notebook sem Jupyter.
+- `entrega/evidencias_mlflow.json`: campeão, versão, run, parâmetros, métricas e saúde.
+- `entrega/modelo_exportado/`: modelo completo, código customizado e dependências.
+- `artefatos/referencia/` e `artefatos/relatorio_zero/`: baseline e tabelas de monitoramento.
+- `artefatos/paridade_predict.csv` e `artefatos/paridade_lotes.json`: paridade da API e
+  dos 39.497 scores completos dos lotes. `/predict` serializa seis casas decimais;
+  comparamos exatamente essa saída e, nos lotes, a precisão completa com tolerância 1e−15.
+- `artefatos/testes.xml`: resultado dos testes automatizados.
+
+Foram aprovados 27 testes, incluindo o carregamento do modelo exportado em um
+processo Python isolado, fora do workspace e sem acesso ao YAML local.
+
+O ZIP inclui código, app original, contrato, histórico, Docker/Compose, dependências,
+notebook, modelo exportado e evidências. Exclui `.env`, tokens e senhas locais.
+Para reconstruir em outro computador, extraia o ZIP e rode `make up` e `make executar`.
+Não é necessário conectar-se ao MLflow original para inspecionar o modelo exportado.
+
+O procedimento manual original está preservado abaixo como alternativa ao Compose.
+
 ## O que você precisa
 
 - **Python 3.10 a 3.13**

@@ -1,0 +1,14 @@
+[
+  {
+    "semana": 11,
+    "n": 20399,
+    "erro_maximo": 1.1102230246251565e-16,
+    "decisoes_identicas": true
+  },
+  {
+    "semana": 12,
+    "n": 19098,
+    "erro_maximo": 1.1102230246251565e-16,
+    "decisoes_identicas": true
+  }
+]

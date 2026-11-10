@@ -1,0 +1,90 @@
+name: aurora-antifraude
+x-python: &python
+  image: aurora-antifraude:local
+  build:
+    context: .
+    secrets:
+      - build_ca
+  working_dir: /workspace
+  volumes:
+    - .:/workspace
+  environment: &env
+    PG_HOST: postgres
+    PG_PORT: "5432"
+    PG_USER: postgres
+    PG_SENHA: ${PG_SENHA:?Crie o .env com make setup}
+    PG_DB_APP: antifraude
+    PG_DB_MLFLOW: mlflow
+    MLFLOW_TRACKING_URI: http://mlflow:5000
+    SISTEMA_URL: http://app:8000
+    TZ: America/Sao_Paulo
+    OMP_NUM_THREADS: "4"
+    OPENBLAS_NUM_THREADS: "4"
+    MLFLOW_ENABLE_SYSTEM_METRICS_LOGGING: "false"
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${PG_SENHA:?Crie o .env com make setup}
+      TZ: America/Sao_Paulo
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./docker/init-db.sh:/docker-entrypoint-initdb.d/10-init.sh:ro
+      - ./sql:/sql:ro
+    ports:
+      - "127.0.0.1:54321:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d antifraude"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+    restart: unless-stopped
+  mlflow:
+    <<: *python
+    command: ["sh", "-c", "mlflow server --host 0.0.0.0 --port 5000 --workers 2 --backend-store-uri postgresql://postgres:$$PG_SENHA@postgres:5432/mlflow --serve-artifacts --artifacts-destination /mlartifacts"]
+    volumes:
+      - .:/workspace
+      - mlflow-artifacts:/mlartifacts
+    ports:
+      - "127.0.0.1:5000:5000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:5000/health')"]
+      interval: 5s
+      timeout: 5s
+      retries: 60
+    restart: unless-stopped
+  app:
+    <<: *python
+    ports:
+      - "127.0.0.1:8000:8000"
+    depends_on:
+      mlflow:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/saude')"]
+      interval: 10s
+      timeout: 10s
+      retries: 20
+    restart: unless-stopped
+  jupyter:
+    <<: *python
+    command: ["sh", "-c", "jupyter lab --ip=0.0.0.0 --port=8888 --no-browser --allow-root --IdentityProvider.token=$$JUPYTER_TOKEN"]
+    environment:
+      <<: *env
+      JUPYTER_TOKEN: ${JUPYTER_TOKEN:?Crie o .env com make setup}
+    ports:
+      - "127.0.0.1:8888:8888"
+    depends_on:
+      app:
+        condition: service_healthy
+    restart: unless-stopped
+volumes:
+  postgres-data:
+  mlflow-artifacts:
+secrets:
+  build_ca:
+    file: ${SSL_CERT_FILE:-/etc/ssl/cert.pem}

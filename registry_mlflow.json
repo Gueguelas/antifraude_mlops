@@ -1,0 +1,35 @@
+[
+  {
+    "versao": "3",
+    "run_id": "4398e4b800f14df1a95d6cd1fec8ee64",
+    "descricao": "Escolhemos hist_gradient_boosting, com corte 0.06, pelo menor custo observado. Nas semanas 11–12, o custo total é R$ 24.848,61, média de R$ 12.424,30 por semana. A regra Pix acima de R$ 1.000 custa R$ 112.674,90 por semana; a economia média é R$ 100.250,59 por semana (89.0%). Aprovar tudo custa R$ 188.017,77 por semana; o mesmo modelo com corte 0,5 custa R$ 20.810,62. No total das duas semanas, 489 transações legítimas são bloqueadas (R$ 7.335,00 de atrito), e passam 91 fraudes (R$ 17.513,61). Recall 84.8%, precision 51.0%, PR-AUC (average precision) 0.8363, bloqueio 2.5%. Esses números são de validação usada na seleção, não promessa de economia futura. Bloquear encaminha à verificação no app; não significa cancelar a transação.",
+    "tags": {
+      "threshold": "0.06",
+      "motivo": "v1.0.0 - menor custo de validação entre os candidatos",
+      "contrato_versao": "1.0",
+      "versao_semantica": "1.0.0"
+    }
+  },
+  {
+    "versao": "2",
+    "run_id": "6fe2efed5e954b42b917ee5660534f89",
+    "descricao": "Escolhemos hist_gradient_boosting, com corte 0.06, pelo menor custo observado. Nas semanas 11–12, o custo total é R$ 24.848,61, média de R$ 12.424,30 por semana. A regra Pix acima de R$ 1.000 custa R$ 112.674,90 por semana; a economia média é R$ 100.250,59 por semana (89.0%). Aprovar tudo custa R$ 188.017,77 por semana; o mesmo modelo com corte 0,5 custa R$ 20.810,62. No total das duas semanas, 489 transações legítimas são bloqueadas (R$ 7.335,00 de atrito), e passam 91 fraudes (R$ 17.513,61). Recall 84.8%, precision 51.0%, PR-AUC (average precision) 0.8363, bloqueio 2.5%. Esses números são de validação usada na seleção, não promessa de economia futura. Bloquear encaminha à verificação no app; não significa cancelar a transação.",
+    "tags": {
+      "threshold": "0.06",
+      "motivo": "v1.0.0 - menor custo de validação entre os candidatos",
+      "contrato_versao": "1.0",
+      "versao_semantica": "1.0.0"
+    }
+  },
+  {
+    "versao": "1",
+    "run_id": "efeb27a0b3ee4f7ebd95d80e7ae65ad5",
+    "descricao": "Escolhemos hist_gradient_boosting, com corte 0.06, pelo menor custo observado. Nas semanas 11–12, o custo total é R$ 24.848,61, média de R$ 12.424,30 por semana. A regra Pix acima de R$ 1.000 custa R$ 112.674,90 por semana; a economia média é R$ 100.250,59 por semana (89.0%). Aprovar tudo custa R$ 188.017,77 por semana; o mesmo modelo com corte 0,5 custa R$ 20.810,62. No total das duas semanas, 489 transações legítimas são bloqueadas (R$ 7.335,00 de atrito), e passam 91 fraudes (R$ 17.513,61). Recall 84.8%, precision 51.0%, PR-AUC (average precision) 0.8363, bloqueio 2.5%. Esses números são de validação usada na seleção, não promessa de economia futura. Bloquear encaminha à verificação no app; não significa cancelar a transação.",
+    "tags": {
+      "threshold": "0.06",
+      "motivo": "v1.0.0 - menor custo de validação entre os candidatos",
+      "contrato_versao": "1.0",
+      "versao_semantica": "1.0.0"
+    }
+  }
+]

@@ -4,3 +4,4 @@ entrega/
 entrega_parte1_*.zip
 __pycache__/
 .ipynb_checkpoints/
+*.pkl

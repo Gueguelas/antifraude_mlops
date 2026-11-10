@@ -1,0 +1,24 @@
+{
+  "lotes": [
+    {
+      "semana": 11,
+      "transacoes": 20399,
+      "pct_bloqueado": 0.025197313593803616,
+      "versao_modelo": "3",
+      "msg": "Semana 11 repontuada pelo modelo v3. A predição anterior continua no banco; o painel passa a usar esta."
+    },
+    {
+      "semana": 12,
+      "transacoes": 19098,
+      "pct_bloqueado": 0.025342967850036653,
+      "versao_modelo": "3",
+      "msg": "Semana 12 repontuada pelo modelo v3. A predição anterior continua no banco; o painel passa a usar esta."
+    }
+  ],
+  "rotulos": {
+    "inseridos": 0,
+    "repetidos": 39497,
+    "desconhecidos": 0,
+    "msg": "rotulos_historicos_11_12.csv: 0 rótulos gravados, 39497 já existiam (ignorados)."
+  }
+}

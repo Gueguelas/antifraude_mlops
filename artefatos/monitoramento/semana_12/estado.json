@@ -1,0 +1,9 @@
+{
+  "semana": 12,
+  "run_id": "4398e4b800f14df1a95d6cd1fec8ee64",
+  "versao": "3",
+  "threshold": 0.06,
+  "rotulos_fechados": true,
+  "alertas": 2,
+  "status": "investigar"
+}

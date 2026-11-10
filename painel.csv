@@ -1,0 +1,3 @@
+semana,volume,pontuadas,bloqueadas,valor_bloqueado,rotuladas,fraudes,fraude_evitada,fraude_perdida,legitimas_bloqueadas,versoes,pct_bloqueado,custo_total
+11,20399,20399,514,247752.85,20399,309,170243.8,6785.47,251.0,3,0.025197313593803616,10550.470000000001
+12,19098,19098,484,253295.37,19098,291,188278.12,10728.14,238.0,3,0.025342967850036653,14298.14

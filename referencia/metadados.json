@@ -1,0 +1,60 @@
+{
+  "run_id": "4398e4b800f14df1a95d6cd1fec8ee64",
+  "contrato_versao": "1.0",
+  "semanas": [
+    11,
+    12
+  ],
+  "threshold": 0.06,
+  "n": 39497,
+  "rotulos_fechados": true,
+  "features": [
+    "valor_transacao",
+    "hora_transacao",
+    "dia_semana",
+    "canal",
+    "dispositivo_novo",
+    "qtd_transacoes_1h",
+    "valor_medio_30d",
+    "razao_valor_media",
+    "distancia_ultima_transacao_km",
+    "idade_conta_dias",
+    "destinatario_novo",
+    "categoria_estabelecimento",
+    "uf_cliente"
+  ],
+  "limites_alerta": {
+    "ks_d": 0.1,
+    "tv": 0.05,
+    "q": 0.01,
+    "min_n": 500,
+    "bloqueio_delta": 0.02,
+    "custo_aumento": 0.25,
+    "recall_queda": 0.1
+  },
+  "origem": "validação histórica, não lote futuro",
+  "linhagem": {
+    "seed": 42,
+    "contrato": "1.0",
+    "commit_base": "git indisponível no container; hashes de código são a fonte de proveniência",
+    "sha256": {
+      "dados/transacoes_semanas_01_12.csv": "2a21363ee7499a646dd0e04288bba0b81abf87aad4a34c8b299564664a641414",
+      "dados/rotulos_semanas_01_12.csv": "bafda7607bd7dc6b724a757aea94c384f1f155d051880cebfc64e6aca0d4c75f",
+      "contrato/contrato_features.yaml": "5084b6bb26ff22145ec15970aac7a2597ef8a5993c327a2627559e0e19fec2c2",
+      "features.py": "43c4b9903b3f4b421473733aa89010ab97119464b7339a7de5d9cb8f7b23ad18",
+      "monitoramento.py": "ccb41728d40d3a1d05e532e5dd3c8f19b27676400571c6978b046197679fc064",
+      "workflow.py": "fe160347b2a1f4f6aba5da6f26f24e09b998ac7ffec0c76d93d58f9ebeb8690a",
+      "requirements.txt": "26e4e742166f5e0af799c7123b171a0cf66ff424efe4a7bca43f33a5c84e1e08",
+      "requirements-dev.txt": "14bb4051a1a24449c016072f8d219a9c8e15bad96fd51ef62f5cade716cdc5c9",
+      "scripts/preparar_notebook.py": "3aa630848827d59fa0c4d24dca77b24bd1d04aaf51de3d6c9ba5467adb8c3248"
+    },
+    "pacotes": {
+      "mlflow": "2.19.0",
+      "scikit-learn": "1.8.0",
+      "numpy": "2.5.4",
+      "pandas": "2.3.3",
+      "scipy": "1.18.1",
+      "sqlalchemy": "2.0.57"
+    }
+  }
+}

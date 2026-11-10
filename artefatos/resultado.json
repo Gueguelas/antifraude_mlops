@@ -1,0 +1,29 @@
+{
+  "modelo": "hist_gradient_boosting",
+  "versao": "3",
+  "run_id": "4398e4b800f14df1a95d6cd1fec8ee64",
+  "threshold": 0.06,
+  "metricas": {
+    "threshold": 0.06,
+    "n": 39497.0,
+    "fraudes": 600.0,
+    "taxa_fraude": 0.01519102716662025,
+    "recall": 0.8483333333333334,
+    "precision": 0.5100200400801603,
+    "pr_auc": 0.8363474965763378,
+    "custo": 24848.609999999997,
+    "custo_por_1000": 629.1265159379193,
+    "legitimas_bloqueadas": 489.0,
+    "fraudes_aprovadas": 91.0,
+    "fraude_perdida": 17513.609999999997,
+    "fraude_evitada": 358521.92,
+    "taxa_bloqueio": 0.02526774185381168,
+    "valor_bloqueado": 501048.22000000003
+  },
+  "economia_semanal": 100250.59000000001,
+  "custos_baseline": {
+    "aprovar_tudo": 376035.53,
+    "regra_pix": 225349.79,
+    "proprio_modelo_05": 41621.25
+  }
+}
